@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #5d5d5d;
+    }
+    .calculator {
+      background-color: #444;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 300px;
+      margin: auto;
+    }
+    .display {
+      background-color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 32px;
+      text-align: right;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      width: calc(100% - 30px);
+    }
+    .btn {
+      font-size: 24px;
+      padding: 20px 15px;
+      margin: 5px;
+      width: 60px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      background-color: #eee;
+    }
+    .btn:hover {
+      background-color: #ddd;
+    }
+    .btn.operator {
+      background-color: #f90;
+      color: #fff;
+    }
+    .btn.operator:hover {
+      background-color: #f60;
+    }
+    
+    #premiumBtn {
+      font-size: 18px;
+      padding: 15px 20px;
+      border-radius: 25px;
+      border: 2px solid #333;
+      background-color: transparent;
+      color: #333;
+      transition: all 0.3s ease;
+      max-width: 100%;
+    }
+    #premiumBtn:hover {
+      background-color: #00102fdc;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" class="display" id="display" placeholder="0" readonly>
+    <div>
+      <button class="btn" onclick="appendNumber('7')">7</button>
+      <button class="btn" onclick="appendNumber('8')">8</button>
+      <button class="btn" onclick="appendNumber('9')">9</button>
+      <button class="btn operator" onclick="appendOperator('+')">+</button>
+    </div>
+    <div>
+      <button class="btn" onclick="appendNumber('4')">4</button>
+      <button class="btn" onclick="appendNumber('5')">5</button>
+      <button class="btn" onclick="appendNumber('6')">6</button>
+      <button class="btn operator" onclick="appendOperator('-')">-</button>
+    </div>
+    <div>
+      <button class="btn" onclick="appendNumber('1')">1</button>
+      <button class="btn" onclick="appendNumber('2')">2</button>
+      <button class="btn" onclick="appendNumber('3')">3</button>
+      <button class="btn operator" onclick="appendOperator('*')">*</button>
+    </div>
+    <div>
+      <button class="btn" onclick="clearDisplay()">C</button>
+      <button class="btn" onclick="appendNumber('0')">0</button>
+      <button class="btn" onclick="appendDecimal()">.</button>
+      <button class="btn operator" onclick="appendOperator('/')">/</button>
+    </div>
+    <div>
+      <button class="btn operator" style="width: 140px;" onclick="calculate()">=</button>
+    
+      <button class="btn-1" id="premiumBtn" onclick="togglePremium()">Normal</button>
+    </div>
+  </div>
+
+  <script>
+    let displayValue = '';
+    let expression = '';
+    let isCalculated = false;
+    let isPremium = false;
+
+    function appendNumber(num) {
+      if (isCalculated) clearDisplay();
+      displayValue += num;
+      expression += num;
+      updateDisplay();
+    }
+
+    function appendOperator(operator) {
+      if (isCalculated) clearDisplay();
+      displayValue += operator;
+      expression += operator;
+      updateDisplay();
+    }
+
+    function appendDecimal() {
+      if (displayValue.includes('.') || isCalculated) return;
+      displayValue += '.';
+      expression += '.';
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      displayValue = '';
+      expression = '';
+      isCalculated = false;
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (!isCalculated && expression !== '') {
+        let resultMessage = '';
+        if (isPremium) {
+          if (expression.includes('+')) {
+            resultMessage = "Hi crush!";
+          } else if (expression.includes('-')) {
+            resultMessage = "Ang ganda mo!";
+          } else if (expression.includes('*')) {
+            resultMessage = "Miss na kita!";
+          } else if (expression.includes('/')) {
+            resultMessage = "Thanks!";
+          }
+        } else {
+          try {
+            const result = eval(expression);
+            if (isNaN(result) || !isFinite(result)) {
+              resultMessage = 'Error';
+            } else {
+              resultMessage = result.toString();
+            }
+          } catch (error) {
+            resultMessage = 'Error';
+          }
+        }
+        displayValue = resultMessage;
+        isCalculated = true;
+        updateDisplay();
+      }
+    }
+
+    function updateDisplay() {
+      document.getElementById('display').value = displayValue;
+    }
+
+    function togglePremium() {
+      isPremium = !isPremium;
+      const premiumBtn = document.getElementById('premiumBtn');
+      premiumBtn.textContent = isPremium ? 'Premium' : 'Normal';
+      premiumBtn.classList.toggle('premium');
+    }
+  </script>
+
+</body>
+</html>
